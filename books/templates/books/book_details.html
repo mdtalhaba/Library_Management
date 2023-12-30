@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.6)" class="container mx-auto my-24 flex flex-col items-center bg-white p-12 border-8 border-gray-200 shadow-2xl shadow-black md:flex-row dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+    <img class="object-cover w-96 h-96" src="{{book.image.url}}" alt="">
+    <div class="flex flex-col pl-24 justify-between leading-normal">
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ book.title }}</h5>
+        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ book.description}}</p>
+        <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Borrowing Price: ${{ book.borrowing_price }}</h5>
+        <div>
+            {% for category in book.category.all %}
+            <button type="button" class="text-gray-600 bg-gray-300 dark:bg-gray-500 font-medium rounded-lg text-sm px-3 py-2.5 text-center" disabled>{{category.name}}</button>
+      {% endfor %}
+            
+        </div>
+        <a href="{% url "borrow_book" book.id %}" type="button" class="px-3 py-2 mt-8 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Borrow The Book</a>
+    </div>
+</div>
+
+{% endblock content %}
