@@ -14,7 +14,7 @@ class DetailsBookView(DetailView) :
         if review_form.is_valid() :
             new_review = review_form.save(commit=False)
             new_review.book = book
-            new_review.user_review = True
+            new_review.name = f'{request.user.first_name} {request.user.last_name}'
             new_review.save()
             new_review = ''
 
@@ -25,7 +25,8 @@ class DetailsBookView(DetailView) :
         book = self.object
         reviews = book.review.all()
         review_form = ReviewForm()
-            
+        
+        context['data'] = self.request.user
         context['reviews'] = reviews
         context['review_form'] = review_form
         return context

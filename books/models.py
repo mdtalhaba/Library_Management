@@ -8,7 +8,6 @@ class Book(models.Model):
     borrowing_price = models.DecimalField(max_digits=12, decimal_places=2)
     category = models.ManyToManyField(Category)
     image = models.ImageField(upload_to='books/media/uploads/')
-    user_reviews = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -16,6 +15,7 @@ class Book(models.Model):
 
 class Review(models.Model) :
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='review')
+    name = models.CharField(max_length=100, blank=True, null=True)
     body = models.TextField()
     create_on = models.DateTimeField(auto_now_add=True)
 

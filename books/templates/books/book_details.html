@@ -32,7 +32,7 @@
         <p>{{ reviews | length }} Reviews</p>
         {% for review in reviews %}
           <div class="max-w-sm p-4 mt-4 bg-white border border-gray-400 rounded-lg shadow">
-            <h6 class="font-bold">{{ review.user.first_name }} {{review.user.last_name}}</h6>
+            <h6 class="font-bold">{{ review.name }}</h6>
             <p>{{ review.body }}</p>
             <small>{{review.create_on}}</small>
           </div>
