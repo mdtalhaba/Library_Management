@@ -29,6 +29,7 @@ SECRET_KEY = 'django-insecure-)rizi4&he@oj^ifs1r*9_t&hkyiom2kw&3xi13k308ed()1vv(
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ['https://peoples-library.onrender.com','https://*.127.0.0.1']
 
 
 # Application definition
