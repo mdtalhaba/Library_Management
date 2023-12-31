@@ -14,8 +14,10 @@ class DetailsBookView(DetailView) :
         if review_form.is_valid() :
             new_review = review_form.save(commit=False)
             new_review.book = book
-            new_review.user = self.request.user
+            new_review.user_review = True
             new_review.save()
+            new_review = ''
+
         return self.get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

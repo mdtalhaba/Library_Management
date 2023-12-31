@@ -16,7 +16,6 @@ class Book(models.Model):
 
 class Review(models.Model) :
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='review')
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
     body = models.TextField()
     create_on = models.DateTimeField(auto_now_add=True)
 
