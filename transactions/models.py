@@ -18,9 +18,10 @@ class BorrowBook(models.Model):
     account = models.ForeignKey(UserAccount, related_name = 'borrow', on_delete = models.CASCADE)
     book = models.ForeignKey(Book, related_name = 'borrow', on_delete = models.CASCADE)
     borrowed_time = models.DateTimeField(auto_now_add=True)
+    return_book = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['borrowed_time']
 
     def __str__(self) :
-        return self.account.account_number
+        return str(self.account.account_number)

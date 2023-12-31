@@ -60,7 +60,58 @@ class DepositMoneyView(LoginRequiredMixin, CreateView):
 
 def borrow_book(req, book_id):
     book = Book.objects.get(id=book_id)
+    borrow_amount = book.borrowing_price
+    if req.user.account.balance < borrow_amount:
+        messages.error(
+            req,
+            f'{"{:,.2f}".format(float(borrow_amount))}$ is not enough to borrow this book'
+        )
+        return redirect('home')
+    
+
+    req.user.account.balance -= borrow_amount
+    req.user.account.save(update_fields=['balance'])
     borrowbook = BorrowBook(account=req.user.account, book=book)
     borrowbook.save()
+    messages.success(
+            req,
+            f'Your are Borrowing a Book ({book.title}) successfully'
+        )
+    send_transaction_email(req.user, borrow_amount, 'Book Borrowing Message', 'transactions/borrow_book_email.html')
     current_url = reverse('book_details', args=[book_id])
     return redirect(current_url)
+
+
+class BookDepositReportView(LoginRequiredMixin, ListView):
+    template_name = 'transactions/deposit_report.html'
+    model = DepositUser
+    balance = 0
+    
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(
+            account=self.request.user.account
+        )
+        start_date_str = self.request.GET.get('start_date')
+        end_date_str = self.request.GET.get('end_date')
+        
+        if start_date_str and end_date_str:
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+            
+            queryset = queryset.filter(timestamp__date__gte=start_date, timestamp__date__lte=end_date)
+            self.balance = DepositUser.objects.filter(
+                timestamp__date__gte=start_date, timestamp__date__lte=end_date
+            ).aggregate(Sum('amount'))['amount__sum']
+        else:
+            self.balance = self.request.user.account.balance
+       
+        return queryset.distinct()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'account': self.request.user.account
+        })
+
+        return context
+
